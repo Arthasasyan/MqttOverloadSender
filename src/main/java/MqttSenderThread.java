@@ -21,7 +21,7 @@ public class MqttSenderThread extends Thread {
     public void run() {
         try {
             MqttConnectOptions connectOptions = new MqttConnectOptions();
-            connectOptions.setMaxInflight(messages);
+            connectOptions.setMaxInflight(65535);
             client.connect(connectOptions);
             while (!client.isConnected()) {
                 log.info("Client " + client.getClientId() + " is connecting to " + client.getCurrentServerURI());
@@ -32,6 +32,9 @@ public class MqttSenderThread extends Thread {
                 log.info("Client " + client.getClientId() + " is publishing " + (i + 1) + " message to " + topic);
             }
             log.info(messages + " messages are sent by client " + client.getClientId());
+            while(client.getInFlightMessageCount() != 0) {
+                log.info("Client " + client.getClientId() + " waiting for " + client.getInFlightMessageCount() + " messages to be delivered.");
+            }
             client.disconnect();
             while (client.isConnected()) {
                 log.info("Client " + client.getClientId() + " is disconnecting");

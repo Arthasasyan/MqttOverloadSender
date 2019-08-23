@@ -48,7 +48,6 @@ public class Main {
         }
         for (Thread thread : threadList) {
             while (thread.isAlive()) {
-                continue;
             }
         }
     }
