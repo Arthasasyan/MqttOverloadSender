@@ -1,6 +1,5 @@
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 @Slf4j
@@ -20,9 +19,7 @@ public class MqttSenderThread extends Thread {
     @Override
     public void run() {
         try {
-            MqttConnectOptions connectOptions = new MqttConnectOptions();
-            connectOptions.setMaxInflight(messages);
-            client.connect(connectOptions);
+            client.connect();
             while (!client.isConnected()) {
                 log.info("Client " + client.getClientId() + " is connecting to " + client.getCurrentServerURI());
                 sleep(1000);
@@ -38,7 +35,7 @@ public class MqttSenderThread extends Thread {
                 sleep(1000);
             }
         } catch (Exception e) {
-            log.error(e.getStackTrace().toString());
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         }
         interrupt();

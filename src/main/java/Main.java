@@ -39,17 +39,24 @@ public class Main {
                 "  }\n" +
                 "]\n";
         byte[] payload = stringPayload.getBytes();
-        List<MqttSenderThread> threadList = new ArrayList<MqttSenderThread>();
-        for (int i = 0; i < 8; i++) {
-            MqttSenderThread thread = new MqttSenderThread("tcp://192.168.1.236:1883", "test/rio", payload, 125000);
+        String host = "tcp://192.168.1.236:1883";
+        String topic = "test/rio";
+        /*List<MqttSenderThread> threadList = new ArrayList<MqttSenderThread>();
+        int clients = 8;
+        for (int i = 0; i < clients; i++) {
+            MqttSenderThread thread = new MqttSenderThread(host, topic, payload,
+                    1000000/clients);
             threadList.add(thread);
             thread.start();
             log.info((i + 1) + " thread is run");
         }
         for (Thread thread : threadList) {
             while (thread.isAlive()) {
-                continue;
             }
-        }
+        }*/
+        long time = 1000;
+        MqttSenderForTime senderForTime = new MqttSenderForTime(host);
+        int sent = senderForTime.sendForTime(topic, payload, time);
+        log.info(sent + " messages was sent for " + time + " millis");
     }
 }
