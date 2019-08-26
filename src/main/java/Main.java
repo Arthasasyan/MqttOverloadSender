@@ -40,8 +40,10 @@ public class Main {
                 "]\n";
         byte[] payload = stringPayload.getBytes();
         List<MqttSenderThread> threadList = new ArrayList<MqttSenderThread>();
-        for (int i = 0; i < 8; i++) {
-            MqttSenderThread thread = new MqttSenderThread("tcp://192.168.1.236:1883", "test/rio", payload, 125000);
+        int clients = 8;
+        for (int i = 0; i < clients; i++) {
+            MqttSenderThread thread = new MqttSenderThread("tcp://192.168.1.236:1883", "test/rio", payload,
+                    1000000/clients);
             threadList.add(thread);
             thread.start();
             log.info((i + 1) + " thread is run");
